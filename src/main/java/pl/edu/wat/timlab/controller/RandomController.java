@@ -1,6 +1,7 @@
 package pl.edu.wat.timlab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +21,7 @@ public class RandomController {
     RandomService randomService;
 
 
+    @PreAuthorize("hasRole('RANDOMER')")
     @RequestMapping(value = "/{amount}", method = RequestMethod.GET)
     public Map<String,Object> getRandomNumbers(@PathVariable("amount") int amount){
         Map<String,Object> model = new HashMap<>();
@@ -29,4 +31,10 @@ public class RandomController {
 
         return model;
     }
+
+    @RequestMapping(value = "/list/{amount}", method = RequestMethod.GET)
+    public List<Integer> getRandomNumbersList(@PathVariable("amount") int amount){
+        return randomService.getRandom(amount);
+    }
+
 }
